@@ -22,15 +22,15 @@ circleIntersect(pos1, size1, pos2, size2)
 **size2**:  *Number*,  
 
 
-bsolve(})
+bsolve(object)
 ---------
 **Parameters**
 
-**}**:  *Number[]|{x: number,y: number*,  object either an array with x and y coordinates, or an object with x and y properties.
+**object**:  *Number[]|{x: number,y: number}*,  object either an array with x and y coordinates, or an object with x and y properties.
 
-solve(})
+solve(object)
 --------
 **Parameters**
 
-**}**:  *Number[]|{x: number,y: number*,  object either an array with x and y coordinates, or an object with x and y properties.
+**object**:  *Number[]|{x: number,y: number}*,  object either an array with x and y coordinates, or an object with x and y properties.
 
