@@ -1,6 +1,5 @@
-
 var Sprite = (function () {
-    Sprite.prototype = Object.create(Drawable.prototype);
+"use strict";
 
     /**
      *
@@ -16,7 +15,7 @@ var Sprite = (function () {
         Drawable.apply(this, [centerX, centerY,rotationOffset]);
         this.image = new Image();
         this.loaded=false;
-        this.image.addEventListener('load',function(){this.loaded=true;this.tileWidth=Math.floor(this.image.width/this.width)}.bind(this));
+        this.image.addEventListener('load',function(){this.loaded=true;this.tileWidth=Math.floor(this.image.width/this.width);}.bind(this));
         this.image.src = image;
         this.width = width;
         this.height = height;
@@ -27,6 +26,7 @@ var Sprite = (function () {
         this.tickSpeed=1;
         this.tick=0;
     }
+    Sprite.prototype = Object.create(Drawable.prototype);
 
     Sprite.prototype.setFrame=function(frame){
         this.frame=frame;

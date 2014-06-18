@@ -1,5 +1,5 @@
-
 var PlayArea = (function () {
+"use strict";
     function PlayArea(canvas, x, y, smooth, immediate) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext("2d");

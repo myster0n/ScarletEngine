@@ -2,6 +2,9 @@ module.exports = function(grunt){
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		jshint: {
+      		all:['src/*.js']
+    	},
 		concat: {
 			dist:{
 				src:'src/*.js',
@@ -18,10 +21,10 @@ module.exports = function(grunt){
 			}
 		}
 	});
-
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-	grunt.registerTask('default',['concat','uglify']);
+	grunt.registerTask('default',['jshint','concat','uglify']);
 
 };

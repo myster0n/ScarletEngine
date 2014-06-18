@@ -1,5 +1,5 @@
-
 var Mural = (function () {
+"use strict";
     /**
      *
      * @param {String} selector CSS selector for your canvas element

@@ -1,8 +1,5 @@
-"use strict";
-
-
-
 var Drawable = (function () {
+"use strict";
     /**
      *
      * @param {Number} centerX
@@ -24,7 +21,7 @@ var Drawable = (function () {
         this.parent = null;
         this.rotationOffset = Math.toRadians(rotationOffset || 0);
         this.clamps = {active: false, min: 0, max: 0, mid: 0, absolute: false};
-        this.collision={active:false}
+        this.collision={active:false};
     }
 
     /**
@@ -589,8 +586,8 @@ var Drawable = (function () {
     return Drawable;
 })();
 
-
 var IKSolver=(function(){
+"use strict";
     /**
      *
      * @param {Drawable} base = the unmoving base. Must be the (grand-grand-...) parent of the end piece
@@ -682,7 +679,7 @@ var IKSolver=(function(){
             var abs=segment.getAbsoluteCoordObj();
             var vec=new Vector2D(abs.x,abs.y);
             var res=IKSolver.circleIntersect(vector,s1,vec,s2);
-            if(res==null){
+            if(res===null){
                 segment.pointAt(vector.getCoordObj());
             }else{
                 segment.pointAt(res[0].getCoordObj());
@@ -697,6 +694,7 @@ var IKSolver=(function(){
      */
     IKSolver.prototype.solve=function(object) {
         var vector;
+        var segment;
         if (Array.isArray(object)) {
             vector = new Vector2D(object[0], object[1]);
         } else {
@@ -709,7 +707,7 @@ var IKSolver=(function(){
         var pointTo=vector.cloneVector();
         var length=0;
         for(var i=0;i<this.segments.length;i++){
-            var segment=this.segments[i];
+            segment=this.segments[i];
             var coords=segment.getAbsoluteCoordObj();
             var segvector=new Vector2D(coords.x,coords.y);
             var angle=Vector2D.angleBetween(pointTo,segvector);
@@ -731,8 +729,8 @@ var IKSolver=(function(){
     };
     return IKSolver;
 })();
-
 var Mural = (function () {
+"use strict";
     /**
      *
      * @param {String} selector CSS selector for your canvas element
@@ -828,8 +826,8 @@ var Mural = (function () {
     };
     return Mural;
 })();
-
 var PlayArea = (function () {
+"use strict";
     function PlayArea(canvas, x, y, smooth, immediate) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext("2d");
@@ -904,9 +902,14 @@ var PlayArea = (function () {
     return PlayArea;
 })();
 
-
 var Poly = (function () {
-    Poly.prototype = Object.create(Drawable.prototype);
+"use strict";
+    /**
+     *
+     * @param {Number} centerX
+     * @param {Number} centerY
+     * @constructor
+     */
     function Poly(centerX, centerY) {
         centerX = centerX || 0;
         centerY = centerY || 0;
@@ -917,6 +920,7 @@ var Poly = (function () {
         this._shadow = null;
         this._strokeStyle = null;
     }
+    Poly.prototype = Object.create(Drawable.prototype);
 
 
     Poly.prototype.addPoint = function (x, y) {
@@ -1035,6 +1039,7 @@ var Poly = (function () {
 })();
 
 var ScarletEngine = (function () {
+"use strict";
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     function ScarletEngine(mural, gameloop) {
@@ -1136,9 +1141,8 @@ var ScarletEngine = (function () {
     return ScarletEngine;
 })();
 
-
 var Sprite = (function () {
-    Sprite.prototype = Object.create(Drawable.prototype);
+"use strict";
 
     /**
      *
@@ -1154,7 +1158,7 @@ var Sprite = (function () {
         Drawable.apply(this, [centerX, centerY,rotationOffset]);
         this.image = new Image();
         this.loaded=false;
-        this.image.addEventListener('load',function(){this.loaded=true;this.tileWidth=Math.floor(this.image.width/this.width)}.bind(this));
+        this.image.addEventListener('load',function(){this.loaded=true;this.tileWidth=Math.floor(this.image.width/this.width);}.bind(this));
         this.image.src = image;
         this.width = width;
         this.height = height;
@@ -1165,6 +1169,7 @@ var Sprite = (function () {
         this.tickSpeed=1;
         this.tick=0;
     }
+    Sprite.prototype = Object.create(Drawable.prototype);
 
     Sprite.prototype.setFrame=function(frame){
         this.frame=frame;
@@ -1259,8 +1264,6 @@ var Sprite = (function () {
     return Sprite;
 })();
 
-"use strict";
-
 /**
  * Converted from actionscript found on http://rocketmandevelopment.com/
  */
@@ -1268,7 +1271,7 @@ if(!Math.TAU){
     Math.TAU=2*Math.PI;
 }
 if(!Math.squared){
-    Math.squared=function(num){return num*num;}
+    Math.squared=function(num){return num*num;};
 }
 if(!Math.isOverlapping){
     Math.isOverlapping=function(xmin,xmax,ymin,ymax){
@@ -1297,7 +1300,7 @@ if(!Math.rnd){
     };
 }
 var Vector2D= (function(){
-
+"use strict";
     /**
      * Constructor
      */

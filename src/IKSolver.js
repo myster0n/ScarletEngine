@@ -1,5 +1,5 @@
-
 var IKSolver=(function(){
+"use strict";
     /**
      *
      * @param {Drawable} base = the unmoving base. Must be the (grand-grand-...) parent of the end piece
@@ -91,7 +91,7 @@ var IKSolver=(function(){
             var abs=segment.getAbsoluteCoordObj();
             var vec=new Vector2D(abs.x,abs.y);
             var res=IKSolver.circleIntersect(vector,s1,vec,s2);
-            if(res==null){
+            if(res===null){
                 segment.pointAt(vector.getCoordObj());
             }else{
                 segment.pointAt(res[0].getCoordObj());
@@ -106,6 +106,7 @@ var IKSolver=(function(){
      */
     IKSolver.prototype.solve=function(object) {
         var vector;
+        var segment;
         if (Array.isArray(object)) {
             vector = new Vector2D(object[0], object[1]);
         } else {
@@ -118,7 +119,7 @@ var IKSolver=(function(){
         var pointTo=vector.cloneVector();
         var length=0;
         for(var i=0;i<this.segments.length;i++){
-            var segment=this.segments[i];
+            segment=this.segments[i];
             var coords=segment.getAbsoluteCoordObj();
             var segvector=new Vector2D(coords.x,coords.y);
             var angle=Vector2D.angleBetween(pointTo,segvector);

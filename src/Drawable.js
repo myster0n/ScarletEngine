@@ -1,8 +1,5 @@
-"use strict";
-
-
-
 var Drawable = (function () {
+"use strict";
     /**
      *
      * @param {Number} centerX
@@ -24,7 +21,7 @@ var Drawable = (function () {
         this.parent = null;
         this.rotationOffset = Math.toRadians(rotationOffset || 0);
         this.clamps = {active: false, min: 0, max: 0, mid: 0, absolute: false};
-        this.collision={active:false}
+        this.collision={active:false};
     }
 
     /**

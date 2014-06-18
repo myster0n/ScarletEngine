@@ -1,4 +1,5 @@
 var ScarletEngine = (function () {
+"use strict";
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     function ScarletEngine(mural, gameloop) {

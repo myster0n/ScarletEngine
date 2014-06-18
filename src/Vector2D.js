@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Converted from actionscript found on http://rocketmandevelopment.com/
  */
@@ -7,7 +5,7 @@ if(!Math.TAU){
     Math.TAU=2*Math.PI;
 }
 if(!Math.squared){
-    Math.squared=function(num){return num*num;}
+    Math.squared=function(num){return num*num;};
 }
 if(!Math.isOverlapping){
     Math.isOverlapping=function(xmin,xmax,ymin,ymax){
@@ -36,7 +34,7 @@ if(!Math.rnd){
     };
 }
 var Vector2D= (function(){
-
+"use strict";
     /**
      * Constructor
      */

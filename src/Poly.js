@@ -1,6 +1,11 @@
-
 var Poly = (function () {
-    Poly.prototype = Object.create(Drawable.prototype);
+"use strict";
+    /**
+     *
+     * @param {Number} centerX
+     * @param {Number} centerY
+     * @constructor
+     */
     function Poly(centerX, centerY) {
         centerX = centerX || 0;
         centerY = centerY || 0;
@@ -11,6 +16,7 @@ var Poly = (function () {
         this._shadow = null;
         this._strokeStyle = null;
     }
+    Poly.prototype = Object.create(Drawable.prototype);
 
 
     Poly.prototype.addPoint = function (x, y) {
