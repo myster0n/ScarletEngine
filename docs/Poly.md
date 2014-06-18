@@ -1,0 +1,7 @@
+getPoint(value)
+---------------
+**Parameters**
+
+**value**,  
+
+
