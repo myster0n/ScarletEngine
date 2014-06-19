@@ -1,5 +1,14 @@
 var PlayArea = (function () {
 "use strict";
+    /**
+     *
+     * @param canvas
+     * @param x
+     * @param y
+     * @param smooth
+     * @param immediate
+     * @constructor
+     */
     function PlayArea(canvas, x, y, smooth, immediate) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext("2d");
@@ -14,12 +23,21 @@ var PlayArea = (function () {
         this.hasChanged = false;
     }
 
+    /**
+     * get mouse position relative to this playArea
+     * @returns {{x: number, y: number}}
+     */
     PlayArea.prototype.getMousePosition = function () {
         var mp = this.parent.getMousePosition();
         mp.x -= this.x;
         mp.y -= this.y;
         return mp;
     };
+    /**
+     *
+     * @param {Drawable} child
+     * @param {number} [level] higher levels get drawn on top of lower levels
+     */
     PlayArea.prototype.addChild = function (child,level) {
         level=level||0;
         if(!this.objects[level]){
@@ -30,20 +48,41 @@ var PlayArea = (function () {
         child.setContext(this.ctx);
         child.setPlayArea(this);
     };
-    PlayArea.prototype.removeChild = function (sprite) {
-        if (this.objects.indexOf(sprite) > -1) {
-            this.objects.splice(this.objects.indexOf(sprite), 1);
+    /**
+     *
+     * @param {Drawable} child
+     */
+    PlayArea.prototype.removeChild = function (child) {
+        var result= this.objects.some(function(level){
+            if(level.indexOf(child)>-1){
+                level.splice(level.indexOf(child),1);
+                return true;
+            }
+        });
+        if(result!==true){
+            throw "Child not found";
         }
     };
+    /**
+     *
+     * @param {Mural} parent
+     */
     PlayArea.prototype.setParent = function (parent) {
         this.parent = parent;
     };
+    /**
+     * called by child elements to indicate something visible has changed
+     */
     PlayArea.prototype.changed = function () {
         this.hasChanged = true;
         if (typeof this.parent !== "undefined" && this.parent !== null) {
             this.parent.changed();
         }
     };
+    /**
+     * draw all children if something has changed or force = true
+     * @param {boolean} [force]
+     */
     PlayArea.prototype.draw = function (force) {
         if (this.hasChanged || force) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -65,9 +104,17 @@ var PlayArea = (function () {
     PlayArea.prototype.getAbsoluteAngle = function () {
         return 0;
     };
+    /**
+     *
+     * @param {Drawable} object
+     */
     PlayArea.prototype.animate=function(object){
         this.parent.animate(object);
     };
+    /**
+     *
+     * @param {Drawable} object
+     */
     PlayArea.prototype.removeAnimation = function(object){
         this.parent.removeAnimation(object);
     };

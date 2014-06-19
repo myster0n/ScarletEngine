@@ -28,15 +28,30 @@ var Sprite = (function () {
     }
     Sprite.prototype = Object.create(Drawable.prototype);
 
+    /**
+     * sets the animation frame
+     * @param {Number} frame
+     * @returns {Sprite}
+     */
     Sprite.prototype.setFrame=function(frame){
         this.frame=frame;
         this.changed();
         return this;
     };
+    /**
+     * sets the animation speed (how many ticks until frame change). Lower is faster
+     * @param {Number} tickSpeed
+     * @returns {Sprite}
+     */
     Sprite.prototype.setSpeed=function(tickSpeed){
         this.tickSpeed=tickSpeed;
         return this;
     };
+    /**
+     * this amount of ticks has passed, recalculate which animation frame to show
+     * @param {Number} ticks
+     * @returns {Sprite}
+     */
     Sprite.prototype.addTicks=function(ticks){
         this.tick+=ticks;
         while(this.tick>this.tickSpeed){
@@ -45,6 +60,11 @@ var Sprite = (function () {
         }
         return this;
     };
+    /**
+     * set or remove sprite from auto anim list
+     * @param {boolean} value
+     * @returns {Sprite}
+     */
     Sprite.prototype.autoAnim=function(value){
         if(value){
             this.playArea.animate(this);
@@ -56,8 +76,8 @@ var Sprite = (function () {
     /**
      *
      * @param {String} name
-     * @param {Number[]} frames
-     * @param {Function} [callback]
+     * @param {Number[]} frames if one of the numbers is -1, the animation stops there.
+     * @param {Function} [callback] called either on every loop or when the animation stops
      * @returns {Sprite}
      */
     Sprite.prototype.addAnimation=function(name,frames,callback){
@@ -66,12 +86,23 @@ var Sprite = (function () {
         this.animations[name]={frames:frames,callback:callback};
         return this;
     };
+    /**
+     *
+     * @param {String} name previously named animation
+     * @param callback [callback] called either on every loop or when the animation stops
+     * @returns {Sprite}
+     */
     Sprite.prototype.setAnimationCallback=function(name,callback){
         if(this.animations[name]){
             this.animations[name].callback=callback;
         }
         return this;
     };
+    /**
+     * Starts animation with predefined name
+     * @param {String} name
+     * @returns {Sprite}
+     */
     Sprite.prototype.startAnimation=function(name){
         if(this.animations[name]){
             this.currentAnimation=this.animations[name];
@@ -79,10 +110,18 @@ var Sprite = (function () {
         }
         return this;
     };
+    /**
+     *
+     * @returns {Sprite}
+     */
     Sprite.prototype.stopAnimation=function(){
         this.currentAnimation=null;
         return this;
     };
+    /**
+     * advance to the next frame in the current animation
+     * @returns {Sprite}
+     */
     Sprite.prototype.advanceAnimationFrame=function(){
         if(this.currentAnimation!==null){
             this.animationIndex++;

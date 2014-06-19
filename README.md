@@ -5,6 +5,8 @@ game(-ish) engine for the HTML canvas element
 
 API
 ---
+[Math](/docs/Math.md/)
+
 [Vector2D](/docs/Vector2D.md/)
 
 [Drawable](/docs/Drawable.md/)

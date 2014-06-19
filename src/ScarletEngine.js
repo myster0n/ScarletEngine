@@ -2,6 +2,12 @@ var ScarletEngine = (function () {
 "use strict";
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    /**
+     *
+     * @param {Mural} mural
+     * @param {Function} [gameloop] gets called every frame
+     * @constructor
+     */
     function ScarletEngine(mural, gameloop) {
         this.mural = mural;
         this.gameloop = gameloop||ScarletEngine.defaultLoop;

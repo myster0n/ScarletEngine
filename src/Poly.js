@@ -18,7 +18,12 @@ var Poly = (function () {
     }
     Poly.prototype = Object.create(Drawable.prototype);
 
-
+    /**
+     * adds a point to the polygon
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Poly}
+     */
     Poly.prototype.addPoint = function (x, y) {
         this.points.push([x, y]);
         this.changed();
@@ -26,7 +31,7 @@ var Poly = (function () {
     };
     /**
      *
-     * @param value
+     * @param {Number} value
      * @returns {Number[]}
      */
     Poly.prototype.getPoint = function (value) {
@@ -35,6 +40,13 @@ var Poly = (function () {
         }
         return null;
     };
+    /**
+     * change the nth point of the polygon. Either enter x and y as separate values or use an [x,y] array.
+     * @param {Number} value
+     * @param {Number|Number[]} x
+     * @param {Number} [y]
+     * @returns {Poly}
+     */
     Poly.prototype.changePoint = function (value, x, y) {
         if (value >= 0 && value < this.points.length) {
             if (!Array.isArray(x)) {
@@ -45,11 +57,20 @@ var Poly = (function () {
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {String} fillStyle
+     * @returns {Poly}
+     */
     Poly.prototype.fillStyle = function (fillStyle) {
         this._fillStyle = fillStyle;
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {String} pattern is image.src
+     */
     Poly.prototype.usePattern = function(pattern){
         this.pattern=new Image();
         this.pattern.src=pattern;
@@ -57,6 +78,11 @@ var Poly = (function () {
         this.pattern.addEventListener('load',function(){this.loaded=true;}.bind(this));
 
     };
+    /**
+     * to move the origin of the pattern
+     * @param {Number} x
+     * @param {Number} y
+     */
     Poly.prototype.patternTranslate=function(x,y){
         if(typeof this.translate === "undefined" || this.translate===null){
             this.translate={x:0,y:0};
@@ -64,6 +90,11 @@ var Poly = (function () {
         this.translate.x=x||this.translate.x;
         this.translate.y=y||this.translate.y;
     };
+    /**
+     * to move the origin of the pattern, relative to the current position
+     * @param {Number} x
+     * @param {Number} y
+     */
     Poly.prototype.relativePatternTranslate=function(x,y){
         if(typeof this.translate === "undefined" || this.translate===null){
             this.translate={x:0,y:0};
@@ -71,16 +102,31 @@ var Poly = (function () {
         if(x)this.translate.x=this.translate.x+x;
         if(y)this.translate.y=this.translate.y+y;
     };
+    /**
+     *
+     * @param lineWidth
+     * @returns {Poly}
+     */
     Poly.prototype.lineWidth = function (lineWidth) {
         this._lineWidth = lineWidth;
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param strokeStyle
+     * @returns {Poly}
+     */
     Poly.prototype.strokeStyle = function (strokeStyle) {
         this._strokeStyle = strokeStyle;
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param shadow
+     * @returns {Poly}
+     */
     Poly.prototype.shadow = function (shadow) {
         this._shadow = shadow;
         this.changed();

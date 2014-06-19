@@ -26,11 +26,11 @@ bsolve(object)
 ---------
 **Parameters**
 
-**object**:  *Number[]|{x: number,y: number}*,  object either an array with x and y coordinates, or an object with x and y properties.
+**object**:  *Number[]|{x: number,y: number}* either an array with x and y coordinates, or an object with x and y properties.
 
 solve(object)
 --------
 **Parameters**
 
-**object**:  *Number[]|{x: number,y: number}*,  object either an array with x and y coordinates, or an object with x and y properties.
+**object**:  *Number[]|{x: number,y: number}* either an array with x and y coordinates, or an object with x and y properties.
 

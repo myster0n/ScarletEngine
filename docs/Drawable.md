@@ -30,8 +30,30 @@ setCollisionBox(x1, y1, x2, y2, \[fromZero\])
 **[fromZero]**:  *Boolean*,  
 
 
-checkDetailedCollisionWith(object)
-----------------------------------
+collisionMode(active)
+---------------------
+**Parameters**
+
+**active**:  *boolean*,  
+
+
+getAbsoluteCollisionBox()
+-------------------------
+getAbsoluteCollisionCircle()
+----------------------------
+**Returns**
+
+*{center: Vector2D, length: Number*,  }
+
+collidesWith(object)
+--------------------
+**Parameters**
+
+**object**:  *Drawable*,  
+
+
+rectCollidesWithRect(object)
+----------------------------
 **Parameters**
 
 **object**:  *Drawable*,  
@@ -152,11 +174,29 @@ removeChild(child)
 **child**:  *Drawable*,  
 
 
+kill()
+------
+kills all the children and removes itself from the parent
+
+
 setParent(parent)
 -----------------
 **Parameters**
 
 **parent**:  *Drawable | PlayArea*,  
+
+
+setCoords(coords)
+------------
+**Parameters**
+
+***coords**:  *Number[]|{x:Number,y:Number}*
+
+addCoords(vector)
+-----------------
+**Parameters**
+
+**vector**:  *Vector2D*,  
 
 
 setPlayArea(playArea)
@@ -170,33 +210,51 @@ getCoordArray()
 ---------------
 getCoordObj()
 -------------
+**Returns**
+
+*{x:Number,y:Number*,  }
+
 setAngle(value)
 ---------------
 **Parameters**
 
-**value**,  
-
+**value**:  *number*,  in radians
 
 calcAngle(value)
 ----------------
 **Parameters**
 
-**value**,  
-
+**value**:  *number*,  in radians
 
 setAngleDegrees(value)
 ----------------------
 **Parameters**
 
-**value**,  
+**value**:  *number*,  in degrees
 
+setAbsoluteAngle(value)
+-----------------------
+**Parameters**
+
+**value**:  *number*,  in radians
 
 calcAbsoluteAngle(value)
 ------------------------
 **Parameters**
 
-**value**:  *Number*,  
+**value**:  *number*,  in radians
 
+setAbsoluteAngleDegrees(value)
+------------------------------
+**Parameters**
+
+**value**:  *number*,  in degrees
+
+getAngle()
+----------
+**Returns**
+
+*number*,  in radians
 
 clamp(value)
 ------------
@@ -206,5 +264,58 @@ enforces limits on angle
 **Parameters**
 
 **value**:  *Number*,  
+
+
+pointAt(object)
+---------------
+**Parameters**
+
+**object**:  *Drawable*,  
+
+
+pointer(object)
+---------------
+**Parameters**
+
+**object**:  *Drawable*,  
+
+
+getAbsolutePosition(\[vector\])
+-------------------------------
+**Parameters**
+
+**[vector]**:  *Vector2D*,  
+
+
+getAbsoluteRotation(\[vector\])
+-------------------------------
+**Parameters**
+
+**[vector]**:  *Vector2D*,  
+
+
+getAbsoluteCoordArray()
+-----------------------
+getAbsoluteCoordObj()
+---------------------
+**Returns**
+
+*{x:Number,y:Number*,  }
+
+getAbsoluteAngle()
+------------------
+**Returns**
+
+*Number*,  in radians
+
+getAbsoluteAngleDegrees()
+-------------------------
+**Returns**
+
+*Number*,  in degrees
+
+changed()
+---------
+to be called when you want to notify that something has changed that impacts redraw
 
 

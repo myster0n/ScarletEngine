@@ -1,26 +1,47 @@
-Vector2D()
-----------
-Constructor
+Vector2D(x, y)
+--------------
+**Parameters**
+
+**x**:  *Number*,  
 
 
-setY()
+**y**:  *Number*,  
+
+
+setY(value)
+-----------
+Set y component.
+
+
+**Parameters**
+
+**value**:  *Number*,  
+
+
+getY()
 ------
-Set and get y component.
+get y component.
 
 
-setX()
+setX(value)
+-----------
+Set x component.
+
+
+**Parameters**
+
+**value**:  *Number*,  
+
+
+getX()
 ------
-Set and get x component.
+get x component.
 
 
 getCoordArray()
 ---------------
 returns both x and y as an array
 
-
-**Returns**
-
-Array
 
 getCoordObj()
 -------------
@@ -29,7 +50,7 @@ returns both x and y as an object
 
 **Returns**
 
-Object
+*{x:Number,y:Number}*
 
 cloneVector()
 -------------
@@ -74,7 +95,7 @@ Does this vector have the same location as another?
 
 **Parameters**
 
-**vector2**,  The vector to test.
+**vector2**:  *Vector2D*,  The vector to test.
 
 **Returns**
 
@@ -90,9 +111,14 @@ getLength()
 Returns the length of the vector.
 
 
-setLength()
------------
+setLength(value)
+----------------
 Sets the length which will change x and y, but not the angle.
+
+
+**Parameters**
+
+**value**:  *Number*,  
 
 
 getAngle()
@@ -114,7 +140,7 @@ Changes the angle of the vector in radians. X and Y will change, length stays th
 
 **Parameters**
 
-**value**,  
+**value**:  *Number*,  
 
 
 setAngleDegrees(value)
@@ -124,7 +150,7 @@ Changes the angle of the vector in degrees. X and Y will change, length stays th
 
 **Parameters**
 
-**value**,  
+**value**:  *Number*,  
 
 
 addAngle(value)
@@ -134,7 +160,7 @@ Add an angle (radians value) to the current angle
 
 **Parameters**
 
-**value**,  
+**value**:  *Number*,  
 
 
 addAngleDegrees(value)
@@ -144,7 +170,7 @@ Add an angle (degrees value) to the current angle
 
 **Parameters**
 
-**value**,  
+**value**:  *Number*,  
 
 
 normalize()
@@ -154,7 +180,7 @@ Sets the vector's length to 1.
 
 **Returns**
 
-Vector2D This vector.
+*Vector2D*,  This vector.
 
 normalcate(len)
 ---------------
@@ -163,11 +189,11 @@ Sets the vector's length to len.
 
 **Parameters**
 
-**len**,  The length to set it to.
+**len**:  *Number*,  The length to set it to.
 
 **Returns**
 
-Vector2D This vector.
+*Vector2D*,  This vector.
 
 truncate(max)
 -------------
@@ -176,11 +202,11 @@ Sets the length under the given value. Nothing is done if the vector is already 
 
 **Parameters**
 
-**max**,  The max length this vector can be.
+**max**:  *Number*,  The max length this vector can be.
 
 **Returns**
 
-Vector2D This vector.
+*Vector2D*,  This vector.
 
 reverse()
 ---------
@@ -189,7 +215,7 @@ Makes the vector face the opposite way.
 
 **Returns**
 
-Vector2D This vector.
+*Vector2D*,  This vector.
 
 dotProduct(vector2)
 -------------------
@@ -198,11 +224,11 @@ Calculate the dot product of this vector and another.
 
 **Parameters**
 
-**vector2**,  Another vector2D.
+**vector2**:  *Vector2D*,  Another vector2D.
 
 **Returns**
 
-Number The dot product.
+*Number*,  The dot product.
 
 crossProduct(vector2)
 ---------------------
@@ -211,11 +237,11 @@ Calculate the cross product of this and another vector.
 
 **Parameters**
 
-**vector2**,  Another Vector2D.
+**vector2**:  *Vector2D*,  Another Vector2D.
 
 **Returns**
 
-Number The cross product.
+*Number*,  The cross product.
 
 angleBetween(vector1, vector2)
 ------------------------------
@@ -224,13 +250,13 @@ Calculate angle between any two vectors.
 
 **Parameters**
 
-**vector1**,  First vector2d.
+**vector1**:  *Vector2D*,  First vector2d.
 
-**vector2**,  Second vector2d.
+**vector2**:  *Vector2D*,  Second vector2d.
 
 **Returns**
 
-Number Angle between vectors.
+*Number*,  Angle between vectors.
 
 getPerpendicular()
 ------------------
@@ -239,7 +265,7 @@ Get the vector that is perpendicular.
 
 **Returns**
 
-Vector2D The perpendicular vector.
+*Vector2D*,  The perpendicular vector.
 
 sign(vector2)
 -------------
@@ -248,59 +274,59 @@ Is the vector to the right or left of this one?
 
 **Parameters**
 
-**vector2**,  The vector to test.
+**vector2**:  *Vector2D*,  The vector to test.
 
 **Returns**
 
-Boolean If left, returns true, if right, false.
+*Boolean*,  If left, returns true, if right, false.
 
-distance(The)
--------------
+distance(vector2)
+-----------------
 Calculate distance between two vectors.
 
 
 **Parameters**
 
-**The**:  *ector2 {Vector2D*,  vector to find distance.
+**vector2**:  *Vector2D*,  The vector to find distance.
 
 **Returns**
 
 *Number*,  The distance.
 
-distSQ(The)
------------
+distSQ(vector2)
+---------------
 Calculate squared distance between vectors. Faster than distance.
 
 
 **Parameters**
 
-**The**:  *ector2 {Vector2D*,  other vector.
+**vector2**:  *Vector2D*,  The other vector.
 
 **Returns**
 
 *Number*,  The squared distance between the vectors.
 
-add(The)
---------
+add(vector2)
+------------
 Add a vector to this vector.
 
 
 **Parameters**
 
-**The**:  *ector2 {Vector2D*,  vector to add to this one.
+**vector2**:  *Vector2D*,  The vector to add to this one.
 
 **Returns**
 
 *Vector2D*,  This vector.
 
-subtract(The)
--------------
+subtract(vector2)
+-----------------
 Subtract a vector from this one.
 
 
 **Parameters**
 
-**The**:  *ector2 {Vector2D*,  vector to subtract.
+**vector2**:  *Vector2D*,  The vector to subtract.
 
 **Returns**
 
@@ -313,7 +339,7 @@ Multiplies this vector by a scalar.
 
 **Parameters**
 
-**scalar**,  The scalar to multiply by.
+**scalar**:  *Number*,  The scalar to multiply by.
 
 **Returns**
 
@@ -326,7 +352,7 @@ Divides this vector by a scalar.
 
 **Parameters**
 
-**scalar**,  The scalar to multiply by.
+**scalar**:  *Number*,  The scalar to multiply by.
 
 **Returns**
 

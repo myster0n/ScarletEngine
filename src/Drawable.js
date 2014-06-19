@@ -46,6 +46,10 @@ var Drawable = (function () {
         this.collision={active:true,x1:Math.min(x1,x2),y1:Math.min(y1,y2),x2:Math.max(x1,x2),y2:Math.max(y1,y2),center:center,length:length};
         return this;
     };
+    /**
+     *
+     * @param {boolean} active
+     */
     Drawable.prototype.collisionMode=function(active){
         if(active){
             if(this.collision.x1){
@@ -55,7 +59,10 @@ var Drawable = (function () {
             this.collision.active=false;
         }
     };
-
+    /**
+     *
+     * @returns {Vector2D[]}
+     */
     Drawable.prototype.getAbsoluteCollisionBox=function(){
         var center=this.getAbsolutePosition();
         var angle=this.getAbsoluteAngle();
@@ -69,12 +76,20 @@ var Drawable = (function () {
         v4.addAngle(angle).add(center);
         return [v1,v2,v3,v4];
     };
+    /**
+     *
+     * @returns {{center: Vector2D, length: Number}}
+     */
     Drawable.prototype.getAbsoluteCollisionCircle=function(){
         var center=this.getAbsolutePosition();
         var angle=this.getAbsoluteAngle();
         return {center:this.collision.center.cloneVector().addAngle(angle).add(center),length:this.collision.length};
     };
-
+    /**
+     *
+     * @param {Drawable} object
+     * @returns {boolean}
+     */
     Drawable.prototype.collidesWith=function(object){
         var cir1=this.getAbsoluteCollisionCircle();
         var cir2=object.getAbsoluteCollisionCircle();
@@ -82,14 +97,14 @@ var Drawable = (function () {
         if(cir1.center.distance(cir2.center)>dist){
             return false;
         }
-        return this.checkDetailedCollisionWith(object);
+        return this.rectCollidesWithRect(object);
     };
     /**
      *
      * @param {Drawable} object
      * @returns {boolean}
      */
-    Drawable.prototype.checkDetailedCollisionWith=function(object){
+    Drawable.prototype.rectCollidesWithRect=function(object){
         var collide;
         var colBox=this.getAbsoluteCollisionBox();
         var extColBox=object.getAbsoluteCollisionBox();
@@ -279,6 +294,10 @@ var Drawable = (function () {
             this.childrenbelow.splice(this.childrenbelow.indexOf(child), 1);
         }
     };
+    /**
+     * kills all the children and removes itself from the parent
+     * @returns {null}
+     */
     Drawable.prototype.kill = function () {
         if (typeof this.parent !== "undefined" && this.parent !== null) {
             this.parent.removeChild(this);
@@ -309,6 +328,11 @@ var Drawable = (function () {
         this.parent = parent;
         return this;
     };
+    /**
+     *
+     * @param {Number[]|{x:Number,y:Number}} coords
+     * @returns {Drawable}
+     */
     Drawable.prototype.setCoords = function (coords) {
         if (Array.isArray(coords)) {
             this.position.setX(coords[0]);
@@ -320,6 +344,11 @@ var Drawable = (function () {
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {Vector2D} vector
+     * @returns {Drawable}
+     */
     Drawable.prototype.addCoords=function(vector){
         this.position.add(vector);
         this.changed();
@@ -347,14 +376,14 @@ var Drawable = (function () {
     };
     /**
      *
-     * @returns {Object}
+     * @returns {{x:Number,y:Number}}
      */
     Drawable.prototype.getCoordObj = function () {
         return this.position.getCoordObj();
     };
     /**
      *
-     * @param value
+     * @param {number} value in radians
      * @returns {Drawable}
      */
     Drawable.prototype.setAngle = function (value) {
@@ -368,7 +397,7 @@ var Drawable = (function () {
     };
     /**
      *
-     * @param value
+     * @param {number} value in radians
      * @returns {Vector2D}
      */
     Drawable.prototype.calcAngle = function (value) {
@@ -379,7 +408,7 @@ var Drawable = (function () {
     };
     /**
      *
-     * @param value
+     * @param {number} value in degrees
      * @returns {Drawable}
      */
     Drawable.prototype.setAngleDegrees = function (value) {
@@ -387,6 +416,11 @@ var Drawable = (function () {
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {number} value in radians
+     * @returns {Drawable}
+     */
     Drawable.prototype.setAbsoluteAngle = function (value) {
         if (this.clamps.active && this.clamps.absolute) {
             value = this.clamp(value- (this.getAbsoluteAngle() - this.getAngle()));
@@ -397,7 +431,7 @@ var Drawable = (function () {
     };
     /**
      *
-     * @param {Number} value
+     * @param {number} value in radians
      * @returns {Vector2D}
      */
     Drawable.prototype.calcAbsoluteAngle = function (value) {
@@ -408,9 +442,18 @@ var Drawable = (function () {
         }
         return this.calcAngle(value );
     };
+    /**
+     *
+     * @param {number} value in degrees
+     * @returns {Drawable}
+     */
     Drawable.prototype.setAbsoluteAngleDegrees = function (value) {
         return this.setAbsoluteAngle(value * Math.PI / 180);
     };
+    /**
+     *
+     * @returns {number} in radians
+     */
     Drawable.prototype.getAngle = function () {
         return this.rotation.getAngle();
     };
@@ -448,7 +491,10 @@ var Drawable = (function () {
         }
         return value*Math.PI;
     };
-
+    /**
+     *
+     * @param {Drawable} object
+     */
     Drawable.prototype.pointAt = function (object) {
         var vector;
         if (Array.isArray(object)) {
@@ -459,6 +505,11 @@ var Drawable = (function () {
         var v = vector.subtract(this.getAbsolutePosition());
         this.setAbsoluteAngle(v.getAngle());
     };
+    /**
+     *
+     * @param {Drawable} object
+     * @returns {Number}
+     */
     Drawable.prototype.pointer = function (object) {
         var vector;
         if (Array.isArray(object)) {
@@ -467,9 +518,13 @@ var Drawable = (function () {
             vector = new Vector2D(object.x, object.y);
         }
         var v = vector.subtract(this.getAbsolutePosition());
-        this.calcAbsoluteAngle(v.getAngle());
+        return this.calcAbsoluteAngle(v.getAngle());
     };
-
+    /**
+     *
+     * @param {Vector2D} [vector]
+     * @returns {Vector2D}
+     */
     Drawable.prototype.getAbsolutePosition = function (vector) {
         vector = vector || new Vector2D(0, 0);
         if (typeof this.parent !== "undefined" && this.parent !== null) {
@@ -481,6 +536,11 @@ var Drawable = (function () {
             return vector.addAngle(this.rotation.getAngle()).add(this.position);
         }
     };
+    /**
+     *
+     * @param {Vector2D} [vector]
+     * @returns {Vector2D}
+     */
     Drawable.prototype.getAbsoluteRotation = function (vector) {
         vector = vector || new Vector2D(1, 0);
         if (typeof this.parent !== "undefined" && this.parent !== null) {
@@ -490,18 +550,37 @@ var Drawable = (function () {
             return vector.addAngle(this.rotation.getAngle());
         }
     };
+    /**
+     *
+     * @returns {Number[]}
+     */
     Drawable.prototype.getAbsoluteCoordArray = function () {
         return this.getAbsolutePosition().getCoordArray();
     };
+    /**
+     *
+     * @returns {{x:Number,y:Number}}
+     */
     Drawable.prototype.getAbsoluteCoordObj = function () {
         return this.getAbsolutePosition().getCoordObj();
     };
+    /**
+     *
+     * @returns {Number} in radians
+     */
     Drawable.prototype.getAbsoluteAngle = function () {
         return this.getAbsoluteRotation().getAngle();
     };
+    /**
+     *
+     * @returns {Number} in degrees
+     */
     Drawable.prototype.getAbsoluteAngleDegrees = function () {
         return this.getAbsoluteRotation().getAngleDegrees();
     };
+    /**
+     * to be called when you want to notify that something has changed that impacts redraw
+     */
     Drawable.prototype.changed = function () {
         if (typeof this.playArea !== "undefined" && this.playArea !== null) {
             this.playArea.changed();

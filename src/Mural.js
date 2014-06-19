@@ -46,6 +46,14 @@ var Mural = (function () {
     Mural.prototype.getMousePosition = function () {
         return this.mouseposition;
     };
+    /**
+     *
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} width
+     * @param {Number} height
+     * @returns {PlayArea}
+     */
     Mural.prototype.addPlayArea = function (x, y, width, height) {
         x = x || 0;
         y = y || 0;
@@ -60,18 +68,29 @@ var Mural = (function () {
         this.changed();
         return playArea;
     };
+    /**
+     * gets called by children to notify that there has been a visual change
+     */
     Mural.prototype.changed = function () {
         this.hasChanged = true;
         if (this.immediate) {
             setTimeout(this.redraw.bind(this), 0);
         }
     };
+    /**
+     * redraw the canvas element if something has changed or if force = true
+     * @param {boolean} [force]
+     */
     Mural.prototype.redraw = function (force) {
         if (this.hasChanged || force) {
             this.draw(force);
             this.hasChanged = false;
         }
     };
+    /**
+     * make playAreas redraw themselves if changed or if force = true
+     * @param {boolean} [force]
+     */
     Mural.prototype.draw = function (force) {
         this.context.moveTo(0, 0);
         this.playAreas.forEach(function (playArea) {
@@ -83,11 +102,19 @@ var Mural = (function () {
             that.context.drawImage(playArea.canvas, playArea.x, playArea.y);
         });
     };
+    /**
+     * add sprite to list of sprites that has to be animated automatically
+     * @param {Sprite} object
+     */
     Mural.prototype.animate=function(object){
         if(this.animlist.indexOf(object)===-1){
             this.animlist.push(object);
         }
     };
+    /**
+     * remove sprite to list of sprites that has to be animated automatically
+     * @param {Sprite} object
+     */
     Mural.prototype.removeAnimation=function(object){
         if(this.animlist.indexOf(object)!==-1){
             this.animlist.splice(this.animlist.indexOf(object),1);

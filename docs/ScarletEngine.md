@@ -1,3 +1,12 @@
+ScarletEngine(mural, \[gameloop\])
+----------------------------------
+**Parameters**
+
+**mural**:  *Mural*,  
+
+
+**[gameloop]**:  *Function*,  gets called every frame
+
 isKey(key, \[single\])
 ----------------------
 check key press

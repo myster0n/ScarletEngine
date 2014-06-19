@@ -4,42 +4,55 @@
 var Vector2D= (function(){
 "use strict";
     /**
-     * Constructor
+     *
+     * @param {Number} x
+     * @param {Number} y
+     * @constructor
      */
     function Vector2D(x,y){
         this._x=x||0;
         this._y=y||0;
     }
     /**
-     * Set and get y component.
+     * Set y component.
+     * @param {Number} value
      */
     Vector2D.prototype.setY=function(value){
         this._y = value;
     };
+    /**
+     * get y component.
+     * @returns {Number}
+     */
     Vector2D.prototype.getY=function(){
         return this._y;
     };
 
     /**
-     * Set and get x component.
+     * Set x component.
+     * @param {Number} value
      */
     Vector2D.prototype.setX=function(value){
         this._x = value;
     };
+    /**
+     * get x component.
+     * @returns {Number}
+     */
     Vector2D.prototype.getX=function(){
         return this._x;
     };
 
     /**
      * returns both x and y as an array
-     * @return Array
+     * @return {Number[]}
      */
     Vector2D.prototype.getCoordArray=function(){
         return [this._x,this._y];
     };
     /**
      * returns both x and y as an object
-     * @return Object
+     * @return {{x:Number,y:Number}}
      */
     Vector2D.prototype.getCoordObj=function(){
         return {x:this._x,y:this._y};
@@ -76,7 +89,7 @@ var Vector2D= (function(){
     };
     /**
      * Does this vector have the same location as another?
-     * @param vector2 The vector to test.
+     * @param {Vector2D} vector2 The vector to test.
      * @return Boolean True if equal, false if not.
      */
     Vector2D.prototype.equals=function(vector2){
@@ -84,18 +97,21 @@ var Vector2D= (function(){
     };
     /**
      * Returns the length of this vector, before square root. Allows for a faster check.
+     * @return {Number}
      */
     Vector2D.prototype.getLengthSquared=function(){
         return Math.squared(this._x)+Math.squared(this._y);
     };
     /**
      * Returns the length of the vector.
+     * @return {Number}
      **/
     Vector2D.prototype.getLength=function(){
         return Math.sqrt(this.getLengthSquared());
     };
     /**
      * Sets the length which will change x and y, but not the angle.
+     * @param {Number} value
      */
     Vector2D.prototype.setLength=function(value){
         var angle=this.getAngle();
@@ -122,7 +138,7 @@ var Vector2D= (function(){
     };
     /**
      * Changes the angle of the vector in radians. X and Y will change, length stays the same.
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.setAngle=function(value){
@@ -133,7 +149,7 @@ var Vector2D= (function(){
     };
     /**
      * Changes the angle of the vector in degrees. X and Y will change, length stays the same.
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.setAngleDegrees=function(value){
@@ -141,7 +157,7 @@ var Vector2D= (function(){
     };
     /**
      * Add an angle (radians value) to the current angle
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.addAngle=function(value){
@@ -152,7 +168,7 @@ var Vector2D= (function(){
     };
     /**
      * Add an angle (degrees value) to the current angle
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.addAngleDegrees=function(value){
@@ -160,7 +176,7 @@ var Vector2D= (function(){
     };
     /**
      * Sets the vector's length to 1.
-     * @return Vector2D This vector.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.normalize=function(){
         var len=this.getLength();
@@ -174,8 +190,8 @@ var Vector2D= (function(){
     };
     /**
      * Sets the vector's length to len.
-     * @param len The length to set it to.
-     * @return Vector2D This vector.
+     * @param {Number} len The length to set it to.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.normalcate = function(len){
         this.setLength(len);
@@ -183,8 +199,8 @@ var Vector2D= (function(){
     };
     /**
      * Sets the length under the given value. Nothing is done if the vector is already shorter.
-     * @param max The max length this vector can be.
-     * @return Vector2D This vector.
+     * @param {Number} max The max length this vector can be.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.truncate = function(max){
         this.setLength(Math.min(max,this.getLength()));
@@ -192,7 +208,7 @@ var Vector2D= (function(){
     };
     /**
      * Makes the vector face the opposite way.
-     * @return Vector2D This vector.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.reverse = function(){
         this._x=-this._x;
@@ -201,25 +217,25 @@ var Vector2D= (function(){
     };
     /**
      * Calculate the dot product of this vector and another.
-     * @param vector2 Another vector2D.
-     * @return Number The dot product.
+     * @param {Vector2D} vector2 Another vector2D.
+     * @return {Number} The dot product.
      */
     Vector2D.prototype.dotProduct=function(vector2){
         return this._x*vector2._x + this._y*vector2._y;
     };
     /**
      * Calculate the cross product of this and another vector.
-     * @param vector2 Another Vector2D.
-     * @return Number The cross product.
+     * @param {Vector2D} vector2 Another Vector2D.
+     * @return {Number} The cross product.
      */
     Vector2D.prototype.crossProduct=function(vector2){
         return this._x*vector2._y - this._y*vector2._x;
     };
     /**
      * Calculate angle between any two vectors.
-     * @param vector1 First vector2d.
-     * @param vector2 Second vector2d.
-     * @return Number Angle between vectors.
+     * @param {Vector2D} vector1 First vector2d.
+     * @param {Vector2D} vector2 Second vector2d.
+     * @return {Number} Angle between vectors.
      */
     Vector2D.angleBetween = function(vector1,vector2){
         if(!vector1.isNormalized()) vector1=vector1.cloneVector().normalize();
@@ -228,7 +244,7 @@ var Vector2D= (function(){
     };
     /**
      * Get the vector that is perpendicular.
-     * @return Vector2D The perpendicular vector.
+     * @return {Vector2D} The perpendicular vector.
      */
     Vector2D.prototype.getPerpendicular = function(){
         //noinspection JSSuspiciousNameCombination
@@ -236,15 +252,15 @@ var Vector2D= (function(){
     };
     /**
      * Is the vector to the right or left of this one?
-     * @param vector2 The vector to test.
-     * @return Boolean If left, returns true, if right, false.
+     * @param {Vector2D} vector2 The vector to test.
+     * @return {Boolean} If left, returns true, if right, false.
      */
     Vector2D.prototype.sign=function(vector2){
         return this.getPerpendicular().dotProduct(vector2)<0;
     };
     /**
      * Calculate distance between two vectors.
-     * @param vector2 {Vector2D} The vector to find distance.
+     * @param {Vector2D} vector2 The vector to find distance.
      * @return {Number} The distance.
      */
     Vector2D.prototype.distance=function(vector2){
@@ -252,7 +268,7 @@ var Vector2D= (function(){
     };
     /**
      * Calculate squared distance between vectors. Faster than distance.
-     * @param vector2 {Vector2D} The other vector.
+     * @param {Vector2D} vector2 The other vector.
      * @return {Number} The squared distance between the vectors.
      */
     Vector2D.prototype.distSQ=function(vector2){
@@ -262,7 +278,7 @@ var Vector2D= (function(){
     };
     /**
      * Add a vector to this vector.
-     * @param vector2 {Vector2D} The vector to add to this one.
+     * @param {Vector2D} vector2 The vector to add to this one.
      * @return {Vector2D} This vector.
      */
     Vector2D.prototype.add=function(vector2){
@@ -272,7 +288,7 @@ var Vector2D= (function(){
     };
     /**
      * Subtract a vector from this one.
-     * @param vector2 {Vector2D} The vector to subtract.
+     * @param {Vector2D} vector2 The vector to subtract.
      * @return {Vector2D} This vector.
      */
     Vector2D.prototype.subtract=function(vector2){
@@ -282,7 +298,7 @@ var Vector2D= (function(){
     };
     /**
      * Multiplies this vector by a scalar.
-     * @param scalar The scalar to multiply by.
+     * @param {Number} scalar The scalar to multiply by.
      * @return {Vector2D} This vector, multiplied.
      */
     Vector2D.prototype.multiply=function(scalar){
@@ -292,7 +308,7 @@ var Vector2D= (function(){
     };
     /**
      * Divides this vector by a scalar.
-     * @param scalar The scalar to multiply by.
+     * @param {Number} scalar The scalar to multiply by.
      * @return {Vector2D} This vector, multiplied.
      */
     Vector2D.prototype.divide=function(scalar){
