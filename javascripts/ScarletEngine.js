@@ -1,8 +1,5 @@
-"use strict";
-
-
-
 var Drawable = (function () {
+"use strict";
     /**
      *
      * @param {Number} centerX
@@ -24,7 +21,7 @@ var Drawable = (function () {
         this.parent = null;
         this.rotationOffset = Math.toRadians(rotationOffset || 0);
         this.clamps = {active: false, min: 0, max: 0, mid: 0, absolute: false};
-        this.collision={active:false}
+        this.collision={active:false};
     }
 
     /**
@@ -49,6 +46,10 @@ var Drawable = (function () {
         this.collision={active:true,x1:Math.min(x1,x2),y1:Math.min(y1,y2),x2:Math.max(x1,x2),y2:Math.max(y1,y2),center:center,length:length};
         return this;
     };
+    /**
+     *
+     * @param {boolean} active
+     */
     Drawable.prototype.collisionMode=function(active){
         if(active){
             if(this.collision.x1){
@@ -58,7 +59,10 @@ var Drawable = (function () {
             this.collision.active=false;
         }
     };
-
+    /**
+     *
+     * @returns {Vector2D[]}
+     */
     Drawable.prototype.getAbsoluteCollisionBox=function(){
         var center=this.getAbsolutePosition();
         var angle=this.getAbsoluteAngle();
@@ -72,12 +76,20 @@ var Drawable = (function () {
         v4.addAngle(angle).add(center);
         return [v1,v2,v3,v4];
     };
+    /**
+     *
+     * @returns {{center: Vector2D, length: Number}}
+     */
     Drawable.prototype.getAbsoluteCollisionCircle=function(){
         var center=this.getAbsolutePosition();
         var angle=this.getAbsoluteAngle();
         return {center:this.collision.center.cloneVector().addAngle(angle).add(center),length:this.collision.length};
     };
-
+    /**
+     *
+     * @param {Drawable} object
+     * @returns {boolean}
+     */
     Drawable.prototype.collidesWith=function(object){
         var cir1=this.getAbsoluteCollisionCircle();
         var cir2=object.getAbsoluteCollisionCircle();
@@ -85,14 +97,14 @@ var Drawable = (function () {
         if(cir1.center.distance(cir2.center)>dist){
             return false;
         }
-        return this.checkDetailedCollisionWith(object);
+        return this.rectCollidesWithRect(object);
     };
     /**
      *
      * @param {Drawable} object
      * @returns {boolean}
      */
-    Drawable.prototype.checkDetailedCollisionWith=function(object){
+    Drawable.prototype.rectCollidesWithRect=function(object){
         var collide;
         var colBox=this.getAbsoluteCollisionBox();
         var extColBox=object.getAbsoluteCollisionBox();
@@ -282,6 +294,10 @@ var Drawable = (function () {
             this.childrenbelow.splice(this.childrenbelow.indexOf(child), 1);
         }
     };
+    /**
+     * kills all the children and removes itself from the parent
+     * @returns {null}
+     */
     Drawable.prototype.kill = function () {
         if (typeof this.parent !== "undefined" && this.parent !== null) {
             this.parent.removeChild(this);
@@ -312,6 +328,11 @@ var Drawable = (function () {
         this.parent = parent;
         return this;
     };
+    /**
+     *
+     * @param {Number[]|{x:Number,y:Number}} coords
+     * @returns {Drawable}
+     */
     Drawable.prototype.setCoords = function (coords) {
         if (Array.isArray(coords)) {
             this.position.setX(coords[0]);
@@ -323,6 +344,11 @@ var Drawable = (function () {
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {Vector2D} vector
+     * @returns {Drawable}
+     */
     Drawable.prototype.addCoords=function(vector){
         this.position.add(vector);
         this.changed();
@@ -350,14 +376,14 @@ var Drawable = (function () {
     };
     /**
      *
-     * @returns {Object}
+     * @returns {{x:Number,y:Number}}
      */
     Drawable.prototype.getCoordObj = function () {
         return this.position.getCoordObj();
     };
     /**
      *
-     * @param value
+     * @param {number} value in radians
      * @returns {Drawable}
      */
     Drawable.prototype.setAngle = function (value) {
@@ -371,7 +397,7 @@ var Drawable = (function () {
     };
     /**
      *
-     * @param value
+     * @param {number} value in radians
      * @returns {Vector2D}
      */
     Drawable.prototype.calcAngle = function (value) {
@@ -382,7 +408,7 @@ var Drawable = (function () {
     };
     /**
      *
-     * @param value
+     * @param {number} value in degrees
      * @returns {Drawable}
      */
     Drawable.prototype.setAngleDegrees = function (value) {
@@ -390,6 +416,11 @@ var Drawable = (function () {
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {number} value in radians
+     * @returns {Drawable}
+     */
     Drawable.prototype.setAbsoluteAngle = function (value) {
         if (this.clamps.active && this.clamps.absolute) {
             value = this.clamp(value- (this.getAbsoluteAngle() - this.getAngle()));
@@ -400,7 +431,7 @@ var Drawable = (function () {
     };
     /**
      *
-     * @param {Number} value
+     * @param {number} value in radians
      * @returns {Vector2D}
      */
     Drawable.prototype.calcAbsoluteAngle = function (value) {
@@ -411,9 +442,18 @@ var Drawable = (function () {
         }
         return this.calcAngle(value );
     };
+    /**
+     *
+     * @param {number} value in degrees
+     * @returns {Drawable}
+     */
     Drawable.prototype.setAbsoluteAngleDegrees = function (value) {
         return this.setAbsoluteAngle(value * Math.PI / 180);
     };
+    /**
+     *
+     * @returns {number} in radians
+     */
     Drawable.prototype.getAngle = function () {
         return this.rotation.getAngle();
     };
@@ -451,7 +491,10 @@ var Drawable = (function () {
         }
         return value*Math.PI;
     };
-
+    /**
+     *
+     * @param {Drawable} object
+     */
     Drawable.prototype.pointAt = function (object) {
         var vector;
         if (Array.isArray(object)) {
@@ -462,6 +505,11 @@ var Drawable = (function () {
         var v = vector.subtract(this.getAbsolutePosition());
         this.setAbsoluteAngle(v.getAngle());
     };
+    /**
+     *
+     * @param {Drawable} object
+     * @returns {Number}
+     */
     Drawable.prototype.pointer = function (object) {
         var vector;
         if (Array.isArray(object)) {
@@ -470,9 +518,13 @@ var Drawable = (function () {
             vector = new Vector2D(object.x, object.y);
         }
         var v = vector.subtract(this.getAbsolutePosition());
-        this.calcAbsoluteAngle(v.getAngle());
+        return this.calcAbsoluteAngle(v.getAngle());
     };
-
+    /**
+     *
+     * @param {Vector2D} [vector]
+     * @returns {Vector2D}
+     */
     Drawable.prototype.getAbsolutePosition = function (vector) {
         vector = vector || new Vector2D(0, 0);
         if (typeof this.parent !== "undefined" && this.parent !== null) {
@@ -484,6 +536,11 @@ var Drawable = (function () {
             return vector.addAngle(this.rotation.getAngle()).add(this.position);
         }
     };
+    /**
+     *
+     * @param {Vector2D} [vector]
+     * @returns {Vector2D}
+     */
     Drawable.prototype.getAbsoluteRotation = function (vector) {
         vector = vector || new Vector2D(1, 0);
         if (typeof this.parent !== "undefined" && this.parent !== null) {
@@ -493,18 +550,37 @@ var Drawable = (function () {
             return vector.addAngle(this.rotation.getAngle());
         }
     };
+    /**
+     *
+     * @returns {Number[]}
+     */
     Drawable.prototype.getAbsoluteCoordArray = function () {
         return this.getAbsolutePosition().getCoordArray();
     };
+    /**
+     *
+     * @returns {{x:Number,y:Number}}
+     */
     Drawable.prototype.getAbsoluteCoordObj = function () {
         return this.getAbsolutePosition().getCoordObj();
     };
+    /**
+     *
+     * @returns {Number} in radians
+     */
     Drawable.prototype.getAbsoluteAngle = function () {
         return this.getAbsoluteRotation().getAngle();
     };
+    /**
+     *
+     * @returns {Number} in degrees
+     */
     Drawable.prototype.getAbsoluteAngleDegrees = function () {
         return this.getAbsoluteRotation().getAngleDegrees();
     };
+    /**
+     * to be called when you want to notify that something has changed that impacts redraw
+     */
     Drawable.prototype.changed = function () {
         if (typeof this.playArea !== "undefined" && this.playArea !== null) {
             this.playArea.changed();
@@ -589,8 +665,8 @@ var Drawable = (function () {
     return Drawable;
 })();
 
-
 var IKSolver=(function(){
+"use strict";
     /**
      *
      * @param {Drawable} base = the unmoving base. Must be the (grand-grand-...) parent of the end piece
@@ -682,7 +758,7 @@ var IKSolver=(function(){
             var abs=segment.getAbsoluteCoordObj();
             var vec=new Vector2D(abs.x,abs.y);
             var res=IKSolver.circleIntersect(vector,s1,vec,s2);
-            if(res==null){
+            if(res===null){
                 segment.pointAt(vector.getCoordObj());
             }else{
                 segment.pointAt(res[0].getCoordObj());
@@ -697,6 +773,7 @@ var IKSolver=(function(){
      */
     IKSolver.prototype.solve=function(object) {
         var vector;
+        var segment;
         if (Array.isArray(object)) {
             vector = new Vector2D(object[0], object[1]);
         } else {
@@ -709,7 +786,7 @@ var IKSolver=(function(){
         var pointTo=vector.cloneVector();
         var length=0;
         for(var i=0;i<this.segments.length;i++){
-            var segment=this.segments[i];
+            segment=this.segments[i];
             var coords=segment.getAbsoluteCoordObj();
             var segvector=new Vector2D(coords.x,coords.y);
             var angle=Vector2D.angleBetween(pointTo,segvector);
@@ -731,8 +808,58 @@ var IKSolver=(function(){
     };
     return IKSolver;
 })();
-
+if(!Math.TAU){
+    Math.TAU=2*Math.PI;
+}
+if(!Math.squared){
+    /**
+     *
+     * @param {number} num
+     * @returns {number}
+     */
+    Math.squared=function(num){return num*num;};
+}
+if(!Math.isOverlapping){
+    /**
+     *
+     * @param {number} xmin
+     * @param {number} xmax
+     * @param {number} ymin
+     * @param {number} ymax
+     * @returns {boolean}
+     */
+    Math.isOverlapping=function(xmin,xmax,ymin,ymax){
+        return Math.max(xmin,ymin) <= Math.min(xmax,ymax);
+    };
+}
+if(!Math.toRadians){
+    /**
+     *
+     * @param {number} value in degrees
+     * @returns {number} in radians
+     */
+    Math.toRadians=function(value){
+        return value * Math.PI / 180;
+    };
+}
+if(!Math.rnd){
+    /**
+     * If only num1 is present, calculates random integer from 0 to num1 (inclusive), otherwise from num1 to num2 (inclusive)
+     * @param {Number} num1
+     * @param {Number} [num2]
+     * @returns {Number}
+     */
+    Math.rnd=function(num1,num2){
+        if(num2){
+            num2++;
+            return Math.floor(Math.random()*(num2-num1))+num1;
+        }
+        num1++;
+        return Math.floor(Math.random()*num1);
+    };
+}
 var Mural = (function () {
+"use strict";
     /**
      *
      * @param {String} selector CSS selector for your canvas element
@@ -779,6 +906,14 @@ var Mural = (function () {
     Mural.prototype.getMousePosition = function () {
         return this.mouseposition;
     };
+    /**
+     *
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} width
+     * @param {Number} height
+     * @returns {PlayArea}
+     */
     Mural.prototype.addPlayArea = function (x, y, width, height) {
         x = x || 0;
         y = y || 0;
@@ -793,18 +928,29 @@ var Mural = (function () {
         this.changed();
         return playArea;
     };
+    /**
+     * gets called by children to notify that there has been a visual change
+     */
     Mural.prototype.changed = function () {
         this.hasChanged = true;
         if (this.immediate) {
             setTimeout(this.redraw.bind(this), 0);
         }
     };
+    /**
+     * redraw the canvas element if something has changed or if force = true
+     * @param {boolean} [force]
+     */
     Mural.prototype.redraw = function (force) {
         if (this.hasChanged || force) {
             this.draw(force);
             this.hasChanged = false;
         }
     };
+    /**
+     * make playAreas redraw themselves if changed or if force = true
+     * @param {boolean} [force]
+     */
     Mural.prototype.draw = function (force) {
         this.context.moveTo(0, 0);
         this.playAreas.forEach(function (playArea) {
@@ -816,11 +962,19 @@ var Mural = (function () {
             that.context.drawImage(playArea.canvas, playArea.x, playArea.y);
         });
     };
+    /**
+     * add sprite to list of sprites that has to be animated automatically
+     * @param {Sprite} object
+     */
     Mural.prototype.animate=function(object){
         if(this.animlist.indexOf(object)===-1){
             this.animlist.push(object);
         }
     };
+    /**
+     * remove sprite to list of sprites that has to be animated automatically
+     * @param {Sprite} object
+     */
     Mural.prototype.removeAnimation=function(object){
         if(this.animlist.indexOf(object)!==-1){
             this.animlist.splice(this.animlist.indexOf(object),1);
@@ -828,8 +982,17 @@ var Mural = (function () {
     };
     return Mural;
 })();
-
 var PlayArea = (function () {
+"use strict";
+    /**
+     *
+     * @param canvas
+     * @param x
+     * @param y
+     * @param smooth
+     * @param immediate
+     * @constructor
+     */
     function PlayArea(canvas, x, y, smooth, immediate) {
         this.canvas = canvas;
         this.ctx = this.canvas.getContext("2d");
@@ -844,12 +1007,21 @@ var PlayArea = (function () {
         this.hasChanged = false;
     }
 
+    /**
+     * get mouse position relative to this playArea
+     * @returns {{x: number, y: number}}
+     */
     PlayArea.prototype.getMousePosition = function () {
         var mp = this.parent.getMousePosition();
         mp.x -= this.x;
         mp.y -= this.y;
         return mp;
     };
+    /**
+     *
+     * @param {Drawable} child
+     * @param {number} [level] higher levels get drawn on top of lower levels
+     */
     PlayArea.prototype.addChild = function (child,level) {
         level=level||0;
         if(!this.objects[level]){
@@ -860,20 +1032,41 @@ var PlayArea = (function () {
         child.setContext(this.ctx);
         child.setPlayArea(this);
     };
-    PlayArea.prototype.removeChild = function (sprite) {
-        if (this.objects.indexOf(sprite) > -1) {
-            this.objects.splice(this.objects.indexOf(sprite), 1);
+    /**
+     *
+     * @param {Drawable} child
+     */
+    PlayArea.prototype.removeChild = function (child) {
+        var result= this.objects.some(function(level){
+            if(level.indexOf(child)>-1){
+                level.splice(level.indexOf(child),1);
+                return true;
+            }
+        });
+        if(result!==true){
+            throw "Child not found";
         }
     };
+    /**
+     *
+     * @param {Mural} parent
+     */
     PlayArea.prototype.setParent = function (parent) {
         this.parent = parent;
     };
+    /**
+     * called by child elements to indicate something visible has changed
+     */
     PlayArea.prototype.changed = function () {
         this.hasChanged = true;
         if (typeof this.parent !== "undefined" && this.parent !== null) {
             this.parent.changed();
         }
     };
+    /**
+     * draw all children if something has changed or force = true
+     * @param {boolean} [force]
+     */
     PlayArea.prototype.draw = function (force) {
         if (this.hasChanged || force) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -895,18 +1088,31 @@ var PlayArea = (function () {
     PlayArea.prototype.getAbsoluteAngle = function () {
         return 0;
     };
+    /**
+     *
+     * @param {Drawable} object
+     */
     PlayArea.prototype.animate=function(object){
         this.parent.animate(object);
     };
+    /**
+     *
+     * @param {Drawable} object
+     */
     PlayArea.prototype.removeAnimation = function(object){
         this.parent.removeAnimation(object);
     };
     return PlayArea;
 })();
 
-
 var Poly = (function () {
-    Poly.prototype = Object.create(Drawable.prototype);
+"use strict";
+    /**
+     *
+     * @param {Number} centerX
+     * @param {Number} centerY
+     * @constructor
+     */
     function Poly(centerX, centerY) {
         centerX = centerX || 0;
         centerY = centerY || 0;
@@ -917,8 +1123,14 @@ var Poly = (function () {
         this._shadow = null;
         this._strokeStyle = null;
     }
+    Poly.prototype = Object.create(Drawable.prototype);
 
-
+    /**
+     * adds a point to the polygon
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Poly}
+     */
     Poly.prototype.addPoint = function (x, y) {
         this.points.push([x, y]);
         this.changed();
@@ -926,7 +1138,7 @@ var Poly = (function () {
     };
     /**
      *
-     * @param value
+     * @param {Number} value
      * @returns {Number[]}
      */
     Poly.prototype.getPoint = function (value) {
@@ -935,6 +1147,13 @@ var Poly = (function () {
         }
         return null;
     };
+    /**
+     * change the nth point of the polygon. Either enter x and y as separate values or use an [x,y] array.
+     * @param {Number} value
+     * @param {Number|Number[]} x
+     * @param {Number} [y]
+     * @returns {Poly}
+     */
     Poly.prototype.changePoint = function (value, x, y) {
         if (value >= 0 && value < this.points.length) {
             if (!Array.isArray(x)) {
@@ -945,11 +1164,20 @@ var Poly = (function () {
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {String} fillStyle
+     * @returns {Poly}
+     */
     Poly.prototype.fillStyle = function (fillStyle) {
         this._fillStyle = fillStyle;
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param {String} pattern is image.src
+     */
     Poly.prototype.usePattern = function(pattern){
         this.pattern=new Image();
         this.pattern.src=pattern;
@@ -957,6 +1185,11 @@ var Poly = (function () {
         this.pattern.addEventListener('load',function(){this.loaded=true;}.bind(this));
 
     };
+    /**
+     * to move the origin of the pattern
+     * @param {Number} x
+     * @param {Number} y
+     */
     Poly.prototype.patternTranslate=function(x,y){
         if(typeof this.translate === "undefined" || this.translate===null){
             this.translate={x:0,y:0};
@@ -964,6 +1197,11 @@ var Poly = (function () {
         this.translate.x=x||this.translate.x;
         this.translate.y=y||this.translate.y;
     };
+    /**
+     * to move the origin of the pattern, relative to the current position
+     * @param {Number} x
+     * @param {Number} y
+     */
     Poly.prototype.relativePatternTranslate=function(x,y){
         if(typeof this.translate === "undefined" || this.translate===null){
             this.translate={x:0,y:0};
@@ -971,16 +1209,31 @@ var Poly = (function () {
         if(x)this.translate.x=this.translate.x+x;
         if(y)this.translate.y=this.translate.y+y;
     };
+    /**
+     *
+     * @param lineWidth
+     * @returns {Poly}
+     */
     Poly.prototype.lineWidth = function (lineWidth) {
         this._lineWidth = lineWidth;
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param strokeStyle
+     * @returns {Poly}
+     */
     Poly.prototype.strokeStyle = function (strokeStyle) {
         this._strokeStyle = strokeStyle;
         this.changed();
         return this;
     };
+    /**
+     *
+     * @param shadow
+     * @returns {Poly}
+     */
     Poly.prototype.shadow = function (shadow) {
         this._shadow = shadow;
         this.changed();
@@ -1035,8 +1288,15 @@ var Poly = (function () {
 })();
 
 var ScarletEngine = (function () {
+"use strict";
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    /**
+     *
+     * @param {Mural} mural
+     * @param {Function} [gameloop] gets called every frame
+     * @constructor
+     */
     function ScarletEngine(mural, gameloop) {
         this.mural = mural;
         this.gameloop = gameloop||ScarletEngine.defaultLoop;
@@ -1136,9 +1396,8 @@ var ScarletEngine = (function () {
     return ScarletEngine;
 })();
 
-
 var Sprite = (function () {
-    Sprite.prototype = Object.create(Drawable.prototype);
+"use strict";
 
     /**
      *
@@ -1154,7 +1413,7 @@ var Sprite = (function () {
         Drawable.apply(this, [centerX, centerY,rotationOffset]);
         this.image = new Image();
         this.loaded=false;
-        this.image.addEventListener('load',function(){this.loaded=true;this.tileWidth=Math.floor(this.image.width/this.width)}.bind(this));
+        this.image.addEventListener('load',function(){this.loaded=true;this.tileWidth=Math.floor(this.image.width/this.width);}.bind(this));
         this.image.src = image;
         this.width = width;
         this.height = height;
@@ -1165,16 +1424,32 @@ var Sprite = (function () {
         this.tickSpeed=1;
         this.tick=0;
     }
+    Sprite.prototype = Object.create(Drawable.prototype);
 
+    /**
+     * sets the animation frame
+     * @param {Number} frame
+     * @returns {Sprite}
+     */
     Sprite.prototype.setFrame=function(frame){
         this.frame=frame;
         this.changed();
         return this;
     };
+    /**
+     * sets the animation speed (how many ticks until frame change). Lower is faster
+     * @param {Number} tickSpeed
+     * @returns {Sprite}
+     */
     Sprite.prototype.setSpeed=function(tickSpeed){
         this.tickSpeed=tickSpeed;
         return this;
     };
+    /**
+     * this amount of ticks has passed, recalculate which animation frame to show
+     * @param {Number} ticks
+     * @returns {Sprite}
+     */
     Sprite.prototype.addTicks=function(ticks){
         this.tick+=ticks;
         while(this.tick>this.tickSpeed){
@@ -1183,6 +1458,11 @@ var Sprite = (function () {
         }
         return this;
     };
+    /**
+     * set or remove sprite from auto anim list
+     * @param {boolean} value
+     * @returns {Sprite}
+     */
     Sprite.prototype.autoAnim=function(value){
         if(value){
             this.playArea.animate(this);
@@ -1194,8 +1474,8 @@ var Sprite = (function () {
     /**
      *
      * @param {String} name
-     * @param {Number[]} frames
-     * @param {Function} [callback]
+     * @param {Number[]} frames if one of the numbers is -1, the animation stops there.
+     * @param {Function} [callback] called either on every loop or when the animation stops
      * @returns {Sprite}
      */
     Sprite.prototype.addAnimation=function(name,frames,callback){
@@ -1204,12 +1484,23 @@ var Sprite = (function () {
         this.animations[name]={frames:frames,callback:callback};
         return this;
     };
+    /**
+     *
+     * @param {String} name previously named animation
+     * @param callback [callback] called either on every loop or when the animation stops
+     * @returns {Sprite}
+     */
     Sprite.prototype.setAnimationCallback=function(name,callback){
         if(this.animations[name]){
             this.animations[name].callback=callback;
         }
         return this;
     };
+    /**
+     * Starts animation with predefined name
+     * @param {String} name
+     * @returns {Sprite}
+     */
     Sprite.prototype.startAnimation=function(name){
         if(this.animations[name]){
             this.currentAnimation=this.animations[name];
@@ -1217,10 +1508,18 @@ var Sprite = (function () {
         }
         return this;
     };
+    /**
+     *
+     * @returns {Sprite}
+     */
     Sprite.prototype.stopAnimation=function(){
         this.currentAnimation=null;
         return this;
     };
+    /**
+     * advance to the next frame in the current animation
+     * @returns {Sprite}
+     */
     Sprite.prototype.advanceAnimationFrame=function(){
         if(this.currentAnimation!==null){
             this.animationIndex++;
@@ -1259,82 +1558,61 @@ var Sprite = (function () {
     return Sprite;
 })();
 
-"use strict";
-
 /**
  * Converted from actionscript found on http://rocketmandevelopment.com/
  */
-if(!Math.TAU){
-    Math.TAU=2*Math.PI;
-}
-if(!Math.squared){
-    Math.squared=function(num){return num*num;}
-}
-if(!Math.isOverlapping){
-    Math.isOverlapping=function(xmin,xmax,ymin,ymax){
-        return Math.max(xmin,ymin) <= Math.min(xmax,ymax);
-    };
-}
-if(!Math.toRadians){
-    Math.toRadians=function(value){
-        return value * Math.PI / 180;
-    };
-}
-if(!Math.rnd){
+var Vector2D= (function(){
+"use strict";
     /**
      *
-     * @param {Number} min
-     * @param {Number} [max]
-     * @returns {Number}
-     */
-    Math.rnd=function(min,max){
-        if(max){
-            max++;
-            return Math.floor(Math.random()*(max-min))+min;
-        }
-        min++;
-        return Math.floor(Math.random()*min);
-    };
-}
-var Vector2D= (function(){
-
-    /**
-     * Constructor
+     * @param {Number} x
+     * @param {Number} y
+     * @constructor
      */
     function Vector2D(x,y){
         this._x=x||0;
         this._y=y||0;
     }
     /**
-     * Set and get y component.
+     * Set y component.
+     * @param {Number} value
      */
     Vector2D.prototype.setY=function(value){
         this._y = value;
     };
+    /**
+     * get y component.
+     * @returns {Number}
+     */
     Vector2D.prototype.getY=function(){
         return this._y;
     };
 
     /**
-     * Set and get x component.
+     * Set x component.
+     * @param {Number} value
      */
     Vector2D.prototype.setX=function(value){
         this._x = value;
     };
+    /**
+     * get x component.
+     * @returns {Number}
+     */
     Vector2D.prototype.getX=function(){
         return this._x;
     };
 
     /**
      * returns both x and y as an array
-     * @return Array
+     * @return {Number[]}
      */
     Vector2D.prototype.getCoordArray=function(){
         return [this._x,this._y];
     };
     /**
      * returns both x and y as an object
-     * @return Object
+     * @return {{x:Number,y:Number}}
      */
     Vector2D.prototype.getCoordObj=function(){
         return {x:this._x,y:this._y};
@@ -1371,7 +1649,7 @@ var Vector2D= (function(){
     };
     /**
      * Does this vector have the same location as another?
-     * @param vector2 The vector to test.
+     * @param {Vector2D} vector2 The vector to test.
      * @return Boolean True if equal, false if not.
      */
     Vector2D.prototype.equals=function(vector2){
@@ -1379,18 +1657,21 @@ var Vector2D= (function(){
     };
     /**
      * Returns the length of this vector, before square root. Allows for a faster check.
+     * @return {Number}
      */
     Vector2D.prototype.getLengthSquared=function(){
         return Math.squared(this._x)+Math.squared(this._y);
     };
     /**
      * Returns the length of the vector.
+     * @return {Number}
      **/
     Vector2D.prototype.getLength=function(){
         return Math.sqrt(this.getLengthSquared());
     };
     /**
      * Sets the length which will change x and y, but not the angle.
+     * @param {Number} value
      */
     Vector2D.prototype.setLength=function(value){
         var angle=this.getAngle();
@@ -1417,7 +1698,7 @@ var Vector2D= (function(){
     };
     /**
      * Changes the angle of the vector in radians. X and Y will change, length stays the same.
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.setAngle=function(value){
@@ -1428,7 +1709,7 @@ var Vector2D= (function(){
     };
     /**
      * Changes the angle of the vector in degrees. X and Y will change, length stays the same.
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.setAngleDegrees=function(value){
@@ -1436,7 +1717,7 @@ var Vector2D= (function(){
     };
     /**
      * Add an angle (radians value) to the current angle
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.addAngle=function(value){
@@ -1447,7 +1728,7 @@ var Vector2D= (function(){
     };
     /**
      * Add an angle (degrees value) to the current angle
-     * @param value
+     * @param {Number} value
      * @returns {Vector2D}
      */
     Vector2D.prototype.addAngleDegrees=function(value){
@@ -1455,7 +1736,7 @@ var Vector2D= (function(){
     };
     /**
      * Sets the vector's length to 1.
-     * @return Vector2D This vector.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.normalize=function(){
         var len=this.getLength();
@@ -1469,8 +1750,8 @@ var Vector2D= (function(){
     };
     /**
      * Sets the vector's length to len.
-     * @param len The length to set it to.
-     * @return Vector2D This vector.
+     * @param {Number} len The length to set it to.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.normalcate = function(len){
         this.setLength(len);
@@ -1478,8 +1759,8 @@ var Vector2D= (function(){
     };
     /**
      * Sets the length under the given value. Nothing is done if the vector is already shorter.
-     * @param max The max length this vector can be.
-     * @return Vector2D This vector.
+     * @param {Number} max The max length this vector can be.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.truncate = function(max){
         this.setLength(Math.min(max,this.getLength()));
@@ -1487,7 +1768,7 @@ var Vector2D= (function(){
     };
     /**
      * Makes the vector face the opposite way.
-     * @return Vector2D This vector.
+     * @return {Vector2D} This vector.
      */
     Vector2D.prototype.reverse = function(){
         this._x=-this._x;
@@ -1496,25 +1777,25 @@ var Vector2D= (function(){
     };
     /**
      * Calculate the dot product of this vector and another.
-     * @param vector2 Another vector2D.
-     * @return Number The dot product.
+     * @param {Vector2D} vector2 Another vector2D.
+     * @return {Number} The dot product.
      */
     Vector2D.prototype.dotProduct=function(vector2){
         return this._x*vector2._x + this._y*vector2._y;
     };
     /**
      * Calculate the cross product of this and another vector.
-     * @param vector2 Another Vector2D.
-     * @return Number The cross product.
+     * @param {Vector2D} vector2 Another Vector2D.
+     * @return {Number} The cross product.
      */
     Vector2D.prototype.crossProduct=function(vector2){
         return this._x*vector2._y - this._y*vector2._x;
     };
     /**
      * Calculate angle between any two vectors.
-     * @param vector1 First vector2d.
-     * @param vector2 Second vector2d.
-     * @return Number Angle between vectors.
+     * @param {Vector2D} vector1 First vector2d.
+     * @param {Vector2D} vector2 Second vector2d.
+     * @return {Number} Angle between vectors.
      */
     Vector2D.angleBetween = function(vector1,vector2){
         if(!vector1.isNormalized()) vector1=vector1.cloneVector().normalize();
@@ -1523,7 +1804,7 @@ var Vector2D= (function(){
     };
     /**
      * Get the vector that is perpendicular.
-     * @return Vector2D The perpendicular vector.
+     * @return {Vector2D} The perpendicular vector.
      */
     Vector2D.prototype.getPerpendicular = function(){
         //noinspection JSSuspiciousNameCombination
@@ -1531,15 +1812,15 @@ var Vector2D= (function(){
     };
     /**
      * Is the vector to the right or left of this one?
-     * @param vector2 The vector to test.
-     * @return Boolean If left, returns true, if right, false.
+     * @param {Vector2D} vector2 The vector to test.
+     * @return {Boolean} If left, returns true, if right, false.
      */
     Vector2D.prototype.sign=function(vector2){
         return this.getPerpendicular().dotProduct(vector2)<0;
     };
     /**
      * Calculate distance between two vectors.
-     * @param vector2 {Vector2D} The vector to find distance.
+     * @param {Vector2D} vector2 The vector to find distance.
      * @return {Number} The distance.
      */
     Vector2D.prototype.distance=function(vector2){
@@ -1547,7 +1828,7 @@ var Vector2D= (function(){
     };
     /**
      * Calculate squared distance between vectors. Faster than distance.
-     * @param vector2 {Vector2D} The other vector.
+     * @param {Vector2D} vector2 The other vector.
      * @return {Number} The squared distance between the vectors.
      */
     Vector2D.prototype.distSQ=function(vector2){
@@ -1557,7 +1838,7 @@ var Vector2D= (function(){
     };
     /**
      * Add a vector to this vector.
-     * @param vector2 {Vector2D} The vector to add to this one.
+     * @param {Vector2D} vector2 The vector to add to this one.
      * @return {Vector2D} This vector.
      */
     Vector2D.prototype.add=function(vector2){
@@ -1567,7 +1848,7 @@ var Vector2D= (function(){
     };
     /**
      * Subtract a vector from this one.
-     * @param vector2 {Vector2D} The vector to subtract.
+     * @param {Vector2D} vector2 The vector to subtract.
      * @return {Vector2D} This vector.
      */
     Vector2D.prototype.subtract=function(vector2){
@@ -1577,7 +1858,7 @@ var Vector2D= (function(){
     };
     /**
      * Multiplies this vector by a scalar.
-     * @param scalar The scalar to multiply by.
+     * @param {Number} scalar The scalar to multiply by.
      * @return {Vector2D} This vector, multiplied.
      */
     Vector2D.prototype.multiply=function(scalar){
@@ -1587,7 +1868,7 @@ var Vector2D= (function(){
     };
     /**
      * Divides this vector by a scalar.
-     * @param scalar The scalar to multiply by.
+     * @param {Number} scalar The scalar to multiply by.
      * @return {Vector2D} This vector, multiplied.
      */
     Vector2D.prototype.divide=function(scalar){
