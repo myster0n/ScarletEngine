@@ -1,13 +1,3 @@
-rnd(min, \[max\])
------------------
-**Parameters**
-
-**min**:  *Number*,  
-
-
-**[max]**:  *Number*,  
-
-
 Vector2D()
 ----------
 Constructor
