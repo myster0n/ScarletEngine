@@ -1307,20 +1307,38 @@ var ScarletEngine = (function () {
         this.frameLength=1000/60;
         this.ticksover=0;
         this.totalticksover=0;
+        this.keyCodes=[];
         document.addEventListener("keydown",this.keyDown.bind(this));
         document.addEventListener("keyup",this.keyUp.bind(this));
     }
+    ScarletEngine.prototype.registerKeys=function(keylist){
+        keylist.forEach(this.registerKey.bind(this));
+    };
+    ScarletEngine.prototype.registerKey=function(keyCode){
+        if(this.keyCodes.indexOf(keyCode)===-1){
+            this.keyCodes.push(keyCode);
+        }
+    };
+    ScarletEngine.prototype.releaseKey=function(keyCode){
+        if(this.keyCodes.indexOf(keyCode)!==-1){
+            this.keyCodes.splice(this.keys.indexOf(keyCode),1);
+        }
+    };
     ScarletEngine.prototype.keyDown=function(evt){
         var charCode = (evt.which) ? evt.which : event.keyCode;
-        this.keys[charCode]="new";
-        evt.stopPropagation();
-        evt.preventDefault();
+        if(this.keyCodes.indexOf(charCode)!==-1){
+            this.keys[charCode]="new";
+            evt.stopPropagation();
+            evt.preventDefault();
+        }
     };
     ScarletEngine.prototype.keyUp=function(evt){
         var charCode = (evt.which) ? evt.which : event.keyCode;
         delete this.keys[''+charCode];
-        evt.stopPropagation();
-        evt.preventDefault();
+        if(this.keyCodes.indexOf(charCode)!==-1){
+            evt.stopPropagation();
+            evt.preventDefault();
+        }
     };
     /**
      * check key press

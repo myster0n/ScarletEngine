@@ -22,6 +22,9 @@ var ScarletEngine = (function () {
         document.addEventListener("keydown",this.keyDown.bind(this));
         document.addEventListener("keyup",this.keyUp.bind(this));
     }
+    ScarletEngine.prototype.registerKeys=function(keylist){
+        keylist.forEach(this.registerKey.bind(this));
+    };
     ScarletEngine.prototype.registerKey=function(keyCode){
         if(this.keyCodes.indexOf(keyCode)===-1){
             this.keyCodes.push(keyCode);
