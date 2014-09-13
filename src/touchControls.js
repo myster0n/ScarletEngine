@@ -83,11 +83,12 @@ var TouchControls=(function(){
     };
 
     TouchControls.prototype.detectionLoop=function(){
+        var el,k=null;
         if(this.testTouch!==null){
             for(var i=0;i<this.testTouch.length;i++){
                 var touch=this.testTouch[i];
                 for(var j=0;j<this.elements.length;j++){
-                    var el=this.elements[j];
+                    el=this.elements[j];
                     if(touch.clientY>el.y1 && touch.clientY<el.y2 && touch.clientX>el.x1 && touch.clientX<el.x2){
                         if(el.type===TouchControls.BUTTON){
                             this.elements[j].update={fire:true};
@@ -100,8 +101,8 @@ var TouchControls=(function(){
                     }
                 }
             }
-            for(var k=0;k<this.elements.length;k++){
-                var el=this.elements[k];
+            for(k=0;k<this.elements.length;k++){
+                el=this.elements[k];
                 if(el.type===TouchControls.BUTTON){
                     this.elements[k].fire = el.update;
                 }else if(el.type===TouchControls.CONTINUOUSBUTTON){
@@ -131,8 +132,8 @@ var TouchControls=(function(){
                 this.elements[k].update=false;
             }
         }else{
-            for(var k=0;k<this.elements.length;k++){
-                var el=this.elements[k];
+            for(k=0;k<this.elements.length;k++){
+                el=this.elements[k];
                 switch (el.type){
                     case TouchControls.BUTTON:
                     case TouchControls.CONTINUOUSBUTTON:
