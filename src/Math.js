@@ -22,16 +22,7 @@ if(!Math.isOverlapping){
         return Math.max(xmin,ymin) <= Math.min(xmax,ymax);
     };
 }
-if(!Math.toRadians){
-    /**
-     *
-     * @param {number} value in degrees
-     * @returns {number} in radians
-     */
-    Math.toRadians=function(value){
-        return value * Math.PI / 180;
-    };
-}
+
 if(!Math.rnd){
     /**
      * If only num1 is present, calculates random integer from 0 to num1 (inclusive), otherwise from num1 to num2 (inclusive)

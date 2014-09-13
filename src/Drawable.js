@@ -19,7 +19,7 @@ var Drawable = (function () {
         this.rotation = new Vector2D();
         this.rotation.normalize();
         this.parent = null;
-        this.rotationOffset = Math.toRadians(rotationOffset || 0);
+        this.rotationOffset = Deg.toRadians(rotationOffset || 0);
         this.clamps = {active: false, min: 0, max: 0, mid: 0, absolute: false};
         this.collision={active:false};
     }
@@ -192,7 +192,7 @@ var Drawable = (function () {
      * @returns {Drawable}
      */
     Drawable.prototype.setRotationOffsetDegrees = function (value) {
-        return this.setRotationOffset(value * Math.PI / 180);
+        return this.setRotationOffset(Deg.toRadians(value));
     };
     /**
      * set clamps in radians
@@ -448,7 +448,7 @@ var Drawable = (function () {
      * @returns {Drawable}
      */
     Drawable.prototype.setAbsoluteAngleDegrees = function (value) {
-        return this.setAbsoluteAngle(value * Math.PI / 180);
+        return this.setAbsoluteAngle(Deg.toRadians(value));
     };
     /**
      *

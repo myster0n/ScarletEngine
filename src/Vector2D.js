@@ -153,7 +153,7 @@ var Vector2D= (function(){
      * @returns {Vector2D}
      */
     Vector2D.prototype.setAngleDegrees=function(value){
-        return this.setAngle(value*Math.PI/180);
+        return this.setAngle(Deg.toRadians(value));
     };
     /**
      * Add an angle (radians value) to the current angle
@@ -172,7 +172,7 @@ var Vector2D= (function(){
      * @returns {Vector2D}
      */
     Vector2D.prototype.addAngleDegrees=function(value){
-        return this.addAngle(value*Math.PI/180);
+        return this.addAngle(Deg.toRadians(value));
     };
     /**
      * Sets the vector's length to 1.
