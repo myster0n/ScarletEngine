@@ -1,3 +1,8 @@
+/**
+ * TouchControls.js
+ * Part of ScarletEngine
+ */
+
 var TouchControls=(function(){
     window.addEventListener('load', function() {setTimeout(function() { window.scrollTo(0, 1); }, 50);}, false);
     function TouchControls(){
@@ -5,6 +10,8 @@ var TouchControls=(function(){
         this.winheight=window.innerHeight;
         this.elements=[];
         this.testTouch=null;
+        this.callback=null;
+        this.looper=null;
     }
     TouchControls.JOYSTICK=0;
     TouchControls.BUTTON=1;
@@ -57,28 +64,35 @@ var TouchControls=(function(){
             this.calcElement(i);
         }
     };
-    TouchControls.prototype.start=function(){
+    TouchControls.prototype.start=function(callback){
+        this.calcElements();
         this.winwidth=window.innerWidth;
         this.winheight=window.innerHeight;
-        document.addEventListener('touchstart',this.controls.bind(this),false);
-        document.addEventListener('touchend',this.controls.bind(this),false);
-        document.addEventListener('touchmove',this.controls.bind(this),false);
-        document.addEventListener('touchenter',this.controls.bind(this),false);
-        document.addEventListener('touchleave',this.controls.bind(this),false);
-        document.addEventListener('touchcancel',this.controls.bind(this),false);
-        window.addEventListener('resize', this.doOnOrientationChange.bind(this),false);
+        this.bindedcontrols=this.controls.bind(this);
+        this.bindedorientation=this.doOnOrientationChange.bind(this);
+        document.addEventListener('touchstart',this.bindedcontrols,false);
+        document.addEventListener('touchend',this.bindedcontrols,false);
+        document.addEventListener('touchmove',this.bindedcontrols,false);
+        document.addEventListener('touchenter',this.bindedcontrols,false);
+        document.addEventListener('touchleave',this.bindedcontrols,false);
+        document.addEventListener('touchcancel',this.bindedcontrols,false);
+        window.addEventListener('resize', this.bindedorientation,false);
+        this.callback=callback;
         this.looper=setInterval(this.detectionLoop.bind(this),16);
     };
 
     TouchControls.prototype.stop=function(){
-        document.removeEventListener('touchstart',this.controls.bind(this),false);
-        document.removeEventListener('touchend',this.controls.bind(this),false);
-        document.removeEventListener('touchmove',this.controls.bind(this),false);
-        document.removeEventListener('touchenter',this.controls.bind(this),false);
-        document.removeEventListener('touchleave',this.controls.bind(this),false);
-        document.removeEventListener('touchcancel',this.controls.bind(this),false);
-        window.removeEventListener('resize', this.doOnOrientationChange.bind(this),false);
-        clearInterval(this.looper);
+        document.removeEventListener('touchstart',this.bindedcontrols,false);
+        document.removeEventListener('touchend',this.bindedcontrols,false);
+        document.removeEventListener('touchmove',this.bindedcontrols,false);
+        document.removeEventListener('touchenter',this.bindedcontrols,false);
+        document.removeEventListener('touchleave',this.bindedcontrols,false);
+        document.removeEventListener('touchcancel',this.bindedcontrols,false);
+        window.removeEventListener('resize', this.bindedorientation,false);
+        if(this.looper!==null){
+            clearInterval(this.looper);
+            this.looper=null;
+        }
 
     };
 
@@ -104,7 +118,7 @@ var TouchControls=(function(){
             for(k=0;k<this.elements.length;k++){
                 el=this.elements[k];
                 if(el.type===TouchControls.BUTTON){
-                    this.elements[k].fire = el.update;
+                    this.elements[k].fire = el.update.fire;
                 }else if(el.type===TouchControls.CONTINUOUSBUTTON){
                     if(el.update){
                         this.elements[k].fire=true;
@@ -144,6 +158,9 @@ var TouchControls=(function(){
 
                 }
             }
+        }
+        if(this.callback!==null && typeof this.callback === "function"){
+            this.callback(this);
         }
     };
 
