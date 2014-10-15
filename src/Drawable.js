@@ -154,11 +154,17 @@ var Drawable = (function () {
         margin=margin||0;
         var ob=object.getAbsolutePosition();
         ob.subtract(this.getAbsolutePosition());
-        var ang=(ob.getAngleDegrees()+720)%360;
+        var ang=ob.getAngleDegrees();
+        var testAngle=this.getAbsoluteAngleDegrees();
+        var min=(testAngle-margin);
+        var max=(testAngle+margin);
+        return Deg.isWithinRange(min,max,ang);
+
+        /*var ang=(ob.getAngleDegrees()+720)%360;
         var testAngle=this.getAbsoluteAngleDegrees()+720;
         var min=(testAngle-margin)%360;
         var max=(testAngle+margin)%360;
-        return ang>min && ang<max;
+        return ang>min && ang<max;*/
     };
     /**
      *

@@ -1,5 +1,8 @@
-var Deg=Object.procreate(null,{},{
-    normalize:function(degrees){
+var Deg=(function(){
+    function Deg(){
+
+    }
+    Deg.normalize=function(degrees){
         if(degrees<0){
             degrees+=Math.abs(Math.floor(degrees/360))*360;
         }
@@ -7,8 +10,8 @@ var Deg=Object.procreate(null,{},{
             degrees-=Math.abs(Math.floor(degrees/360))*360;
         }
         return degrees;
-    },
-    isWithinRange:function(start,end,angle){
+    };
+    Deg.isWithinRange=function(start,end,angle){
         if(Math.abs(end-start)>=360){
             return true;
         }
@@ -25,8 +28,9 @@ var Deg=Object.procreate(null,{},{
         }
         return !((degrees < startDegrees) || (degrees > endDegrees));
 
-    },
-    toRadians:function(degrees){
+    };
+    Deg.toRadians=function(degrees){
         return degrees * Math.PI / 180;
-    }
-});
+    };
+    return Deg;
+})();

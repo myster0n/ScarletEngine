@@ -1,5 +1,8 @@
-var Deg=Object.procreate(null,{},{
-    normalize:function(degrees){
+var Deg=(function(){
+    function Deg(){
+
+    }
+    Deg.normalize=function(degrees){
         if(degrees<0){
             degrees+=Math.abs(Math.floor(degrees/360))*360;
         }
@@ -7,8 +10,8 @@ var Deg=Object.procreate(null,{},{
             degrees-=Math.abs(Math.floor(degrees/360))*360;
         }
         return degrees;
-    },
-    isWithinRange:function(start,end,angle){
+    };
+    Deg.isWithinRange=function(start,end,angle){
         if(Math.abs(end-start)>=360){
             return true;
         }
@@ -25,11 +28,12 @@ var Deg=Object.procreate(null,{},{
         }
         return !((degrees < startDegrees) || (degrees > endDegrees));
 
-    },
-    toRadians:function(degrees){
+    };
+    Deg.toRadians=function(degrees){
         return degrees * Math.PI / 180;
-    }
-});
+    };
+    return Deg;
+})();
 var Drawable = (function () {
 "use strict";
     /**
@@ -186,11 +190,17 @@ var Drawable = (function () {
         margin=margin||0;
         var ob=object.getAbsolutePosition();
         ob.subtract(this.getAbsolutePosition());
-        var ang=(ob.getAngleDegrees()+720)%360;
+        var ang=ob.getAngleDegrees();
+        var testAngle=this.getAbsoluteAngleDegrees();
+        var min=(testAngle-margin);
+        var max=(testAngle+margin);
+        return Deg.isWithinRange(min,max,ang);
+
+        /*var ang=(ob.getAngleDegrees()+720)%360;
         var testAngle=this.getAbsoluteAngleDegrees()+720;
         var min=(testAngle-margin)%360;
         var max=(testAngle+margin)%360;
-        return ang>min && ang<max;
+        return ang>min && ang<max;*/
     };
     /**
      *
@@ -1943,6 +1953,11 @@ var Vector2D= (function(){
 
     return Vector2D;
 })();
+/**
+ * TouchControls.js
+ * Part of ScarletEngine
+ */
+
 var TouchControls=(function(){
     window.addEventListener('load', function() {setTimeout(function() { window.scrollTo(0, 1); }, 50);}, false);
     function TouchControls(){
@@ -1950,6 +1965,8 @@ var TouchControls=(function(){
         this.winheight=window.innerHeight;
         this.elements=[];
         this.testTouch=null;
+        this.callback=null;
+        this.looper=null;
     }
     TouchControls.JOYSTICK=0;
     TouchControls.BUTTON=1;
@@ -2002,28 +2019,35 @@ var TouchControls=(function(){
             this.calcElement(i);
         }
     };
-    TouchControls.prototype.start=function(){
+    TouchControls.prototype.start=function(callback,speed){
+        this.calcElements();
         this.winwidth=window.innerWidth;
         this.winheight=window.innerHeight;
-        document.addEventListener('touchstart',this.controls.bind(this),false);
-        document.addEventListener('touchend',this.controls.bind(this),false);
-        document.addEventListener('touchmove',this.controls.bind(this),false);
-        document.addEventListener('touchenter',this.controls.bind(this),false);
-        document.addEventListener('touchleave',this.controls.bind(this),false);
-        document.addEventListener('touchcancel',this.controls.bind(this),false);
-        window.addEventListener('resize', this.doOnOrientationChange.bind(this),false);
-        this.looper=setInterval(this.detectionLoop.bind(this),16);
+        this.bindedcontrols=this.controls.bind(this);
+        this.bindedorientation=this.doOnOrientationChange.bind(this);
+        document.addEventListener('touchstart',this.bindedcontrols,false);
+        document.addEventListener('touchend',this.bindedcontrols,false);
+        document.addEventListener('touchmove',this.bindedcontrols,false);
+        document.addEventListener('touchenter',this.bindedcontrols,false);
+        document.addEventListener('touchleave',this.bindedcontrols,false);
+        document.addEventListener('touchcancel',this.bindedcontrols,false);
+        window.addEventListener('resize', this.bindedorientation,false);
+        this.callback=callback;
+        this.looper=setInterval(this.detectionLoop.bind(this),speed||16);
     };
 
     TouchControls.prototype.stop=function(){
-        document.removeEventListener('touchstart',this.controls.bind(this),false);
-        document.removeEventListener('touchend',this.controls.bind(this),false);
-        document.removeEventListener('touchmove',this.controls.bind(this),false);
-        document.removeEventListener('touchenter',this.controls.bind(this),false);
-        document.removeEventListener('touchleave',this.controls.bind(this),false);
-        document.removeEventListener('touchcancel',this.controls.bind(this),false);
-        window.removeEventListener('resize', this.doOnOrientationChange.bind(this),false);
-        clearInterval(this.looper);
+        document.removeEventListener('touchstart',this.bindedcontrols,false);
+        document.removeEventListener('touchend',this.bindedcontrols,false);
+        document.removeEventListener('touchmove',this.bindedcontrols,false);
+        document.removeEventListener('touchenter',this.bindedcontrols,false);
+        document.removeEventListener('touchleave',this.bindedcontrols,false);
+        document.removeEventListener('touchcancel',this.bindedcontrols,false);
+        window.removeEventListener('resize', this.bindedorientation,false);
+        if(this.looper!==null){
+            clearInterval(this.looper);
+            this.looper=null;
+        }
 
     };
 
@@ -2049,7 +2073,7 @@ var TouchControls=(function(){
             for(k=0;k<this.elements.length;k++){
                 el=this.elements[k];
                 if(el.type===TouchControls.BUTTON){
-                    this.elements[k].fire = el.update;
+                    this.elements[k].fire = el.update?el.update.fire:false;
                 }else if(el.type===TouchControls.CONTINUOUSBUTTON){
                     if(el.update){
                         this.elements[k].fire=true;
@@ -2089,6 +2113,9 @@ var TouchControls=(function(){
 
                 }
             }
+        }
+        if(this.callback!==null && typeof this.callback === "function"){
+            this.callback(this);
         }
     };
 
